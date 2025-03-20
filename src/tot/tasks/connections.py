@@ -39,49 +39,28 @@ class Connections(Task):
         return len(self.data)
     
     def get_input(self, idx: int) -> str:
-        return self.data[idx]
+        input = self.data[idx]['clue1'] + "\n---\n" \
+        + self.data[idx]['clue2'] + "\n---\n" \
+        + self.data[idx]['clue3'] + "\n---\n" \
+        + self.data[idx]['clue4'] + "\n---\n"
 
     def test_output(self, idx: int, output: str):
-        if (out)
-        # expression = output.strip().split('\n')[-1].lower().replace('answer: ', '').split('=')[0]
-        # numbers = re.findall(r'\d+', expression)
-        # problem_numbers = re.findall(r'\d+', self.data[idx])
-        # if sorted(numbers) != sorted(problem_numbers):
-        #     return {'r': 0}
-        # try:
-        #     # print(sympy.simplify(expression))
-        #     return {'r': int(sympy.simplify(expression) == 24)}
-        # except Exception as e:
-        #     # print(e)
-        #     return {'r': 0}
+        if output == self.data[idx]["answer"]: # TODO
+          return {'r': 1}
+        return {'r': 0}
             
     @staticmethod
     def standard_prompt_wrap(x: str, y:str='') -> str:
-        return standard_prompt.format(input=x) + y
-
-    @staticmethod
-    def cot_prompt_wrap(x: str, y:str='') -> str:
-        return cot_prompt.format(input=x) + y
+        return standard_prompt.format(input=x)
     
     @staticmethod
     def propose_prompt_wrap(x: str, y: str='') -> str:
-        current_numbers = get_current_numbers(y if y else x)
-        if current_numbers == '24':
-            prompt = cot_prompt.format(input=x) + 'Steps:' + y
-            # print([prompt])
-        else:
-            prompt = propose_prompt.format(input=current_numbers)
+        prompt = propose_prompt.format(input=x, output=y)
         return prompt
     
     @staticmethod
     def value_prompt_wrap(x: str, y: str) -> str:
-        last_line = y.strip().split('\n')[-1]
-        if 'left: ' not in last_line:  # last step
-            ans = last_line.lower().replace('answer: ', '')
-            # print([value_last_step_prompt.format(input=x, answer=ans)])
-            return value_last_step_prompt.format(input=x, answer=ans)
-        current_numbers = get_current_numbers(y)
-        return value_prompt.format(input=current_numbers)
+        return value_prompt.format(input=x, output=y)
     
     @staticmethod
     def value_outputs_unwrap(x: str, y: str, value_outputs: list) -> float:
